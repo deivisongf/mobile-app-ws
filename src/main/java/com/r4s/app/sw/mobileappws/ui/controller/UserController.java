@@ -2,6 +2,7 @@ package com.r4s.app.sw.mobileappws.ui.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("users") //http:localhost:8080/users
 public class UserController {
 	
-	@GetMapping
-	public String getUser() {
-		return "get user was called";
+	@GetMapping(path="/{userId}")
+	public String getUser(@PathVariable String userId) {
+		return "get user was called with userId = " + userId;
 	}
 	
 	@PostMapping
