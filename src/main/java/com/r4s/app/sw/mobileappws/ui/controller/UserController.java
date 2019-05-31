@@ -1,6 +1,8 @@
 package com.r4s.app.sw.mobileappws.ui.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ public class UserController {
 	}
 	
 	@GetMapping(path="/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public UserRest getUser(@PathVariable String userId) {
+	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
 		
 		UserRest fakeUser = new UserRest();
 		fakeUser.setEmail("testing@test.com");
@@ -33,7 +35,7 @@ public class UserController {
 		fakeUser.setLastName("Guar");
 		fakeUser.setUserId("1");
 		
-		return fakeUser;
+		return new ResponseEntity<UserRest>(fakeUser, HttpStatus.OK);
 	}
 	
 	@PostMapping
