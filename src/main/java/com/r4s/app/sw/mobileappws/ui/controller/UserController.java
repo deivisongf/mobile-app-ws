@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.r4s.app.sw.mobileappws.ui.model.response.UserRest;
+import com.r4s.app.sw.mobileappws.ui.model.request.UserDetailsRequestModel;
+import com.r4s.app.sw.mobileappws.ui.model.response.UserDetailsResponseModel;
 
 @RestController
 @RequestMapping("users") //http:localhost:8080/users
@@ -27,20 +29,27 @@ public class UserController {
 	}
 	
 	@GetMapping(path="/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+	public ResponseEntity<UserDetailsResponseModel> getUser(@PathVariable String userId) {
 		
-		UserRest fakeUser = new UserRest();
+		UserDetailsResponseModel fakeUser = new UserDetailsResponseModel();
 		fakeUser.setEmail("testing@test.com");
 		fakeUser.setFirstName("Deiv");
 		fakeUser.setLastName("Guar");
-		fakeUser.setUserId("1");
 		
-		return new ResponseEntity<UserRest>(fakeUser, HttpStatus.OK);
+		return new ResponseEntity<UserDetailsResponseModel>(fakeUser, HttpStatus.OK);
 	}
 	
-	@PostMapping
-	public String createUser() {
-		return "create user was called";
+	@PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, 
+				 produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<UserDetailsResponseModel> createUser(@RequestBody UserDetailsRequestModel userDetails) {
+		
+		UserDetailsResponseModel fakeUser = new UserDetailsResponseModel();
+		fakeUser.setEmail(userDetails.getEmail());
+		fakeUser.setFirstName(userDetails.getFirstName());
+		fakeUser.setLastName(userDetails.getLastName());
+		fakeUser.setPassword(userDetails.getPassword());
+		
+		return new ResponseEntity<UserDetailsResponseModel>(fakeUser, HttpStatus.OK);
 	}
 	
 	@PutMapping
