@@ -1,5 +1,9 @@
 package com.r4s.app.sw.mobileappws.ui.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,8 @@ import com.r4s.app.sw.mobileappws.ui.model.response.UserDetailsResponseModel;
 @RequestMapping("users") //http:localhost:8080/users
 public class UserController {
 	
+	Map<String, UserDetailsResponseModel> users;
+	
 	@GetMapping()
 	public String getUser(@RequestParam(value="page", defaultValue="1") int page, 
 						  @RequestParam(value="limit", defaultValue="50") int limit,
@@ -33,12 +39,11 @@ public class UserController {
 	@GetMapping(path="/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserDetailsResponseModel> getUser(@PathVariable String userId) {
 		
-		UserDetailsResponseModel fakeUser = new UserDetailsResponseModel();
-		fakeUser.setEmail("testing@test.com");
-		fakeUser.setFirstName("Deiv");
-		fakeUser.setLastName("Guar");
+		if(users.containsKey(userId)) {
+			return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
+		}
 		
-		return new ResponseEntity<UserDetailsResponseModel>(fakeUser, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	@PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, 
@@ -50,6 +55,13 @@ public class UserController {
 		fakeUser.setFirstName(userDetails.getFirstName());
 		fakeUser.setLastName(userDetails.getLastName());
 		fakeUser.setPassword(userDetails.getPassword());
+		
+		String userId = UUID.randomUUID().toString();
+		
+		fakeUser.setUserId(userId);
+		
+		if(users == null) users = new HashMap<>();
+		users.put(userId, fakeUser);
 		
 		return new ResponseEntity<UserDetailsResponseModel>(fakeUser, HttpStatus.OK);
 	}
