@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.r4s.app.sw.mobileappws.ui.model.request.UpdateUserDetailRequestModel;
 import com.r4s.app.sw.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.r4s.app.sw.mobileappws.ui.model.response.UserDetailsResponseModel;
 
@@ -66,9 +67,18 @@ public class UserController {
 		return new ResponseEntity<UserDetailsResponseModel>(fakeUser, HttpStatus.OK);
 	}
 	
-	@PutMapping
-	public String updateUser() {
-		return "update user was called";
+	@PutMapping(path="/{userId}", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, 
+								  produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public UserDetailsResponseModel updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailRequestModel userDetails) {
+		
+		UserDetailsResponseModel storedUserDetails = users.get(userId);
+		
+		storedUserDetails.setFirstName(userDetails.getFirstName());
+		storedUserDetails.setLastName(userDetails.getLastName());
+		
+		users.put(userId, storedUserDetails);
+		
+		return storedUserDetails;
 	}
 	
 	@DeleteMapping
